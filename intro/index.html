@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌎 Hola, soy Jenny ✨</title>
+  <title>Hola, soy Jenny </title>
   <style>
     /* ====== RESET ====== */
     * {
@@ -63,6 +63,7 @@
       align-items: center;
       gap: 20px;
       flex-wrap: wrap;
+      padding: 2rem;
     }
 
     img {
@@ -75,6 +76,30 @@
     img:hover {
       transform: scale(1.05);
       box-shadow: 0 0 40px rgba(255,255,255,0.4);
+    }
+
+    /* ====== RANDOM PICS SECTION ====== */
+    section#random-pics {
+      margin: 4rem 0;
+      text-align: center;
+    }
+
+    section#random-pics h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    section#random-pics p {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin-bottom: 2rem;
+    }
+
+    .gallery {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
     /* ====== FOOTER ====== */
@@ -93,11 +118,20 @@
 
   <!-- MAIN -->
   <main>
-    <!-- Fotos ejemplo -->
-    <img src="https://drive.google.com/uc?export=view&id=1m8u0eToJ3htezlp-_IBqOU2nFwfE3VYg" alt="Foto de Jenny">
-" alt="Foto Jenny">
-    <!-- Agregar más <img> aquí -->
+    <img src="foto2jpg.jpg" alt="Foto 1">
+    <img src="fotoJenny.jpg" alt="Foto Jenny">
   </main>
+
+  <!-- RANDOM PICS -->
+  <section id="random-pics">
+    <h2>📸 Random Pics</h2>
+    <p>Colección de fotos random con mini descripciones ✨</p>
+    <div class="gallery">
+      <img src="foto3.jpg" alt="Random 1">
+      <img src="foto4.jpg" alt="Random 2">
+      <img src="foto5.jpg" alt="Random 3">
+    </div>
+  </section>
 
   <!-- FOOTER -->
   <footer>
@@ -149,4 +183,3 @@
   </script>
 </body>
 </html>
-
