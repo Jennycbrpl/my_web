@@ -1,185 +1,200 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hola, soy Jenny </title>
-  <style>
-    /* ====== RESET ====== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jenny | AI Baby Engineer ✨</title>
 
-    body {
-      font-family: "Poppins", sans-serif;
-      color: #fff;
-      background: radial-gradient(circle at 20% 20%, #1e1e2f, #0d0d16 80%);
-      background-size: 400% 400%;
-      animation: galaxyMove 15s ease infinite;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-    }
+<style>
+/* ====== RESET ====== */
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
 
-    @keyframes galaxyMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+/* ===== BACKGROUND GALAXY ===== */
+body{
+background: radial-gradient(circle at 10% 10%,#1b002f,#000 60%);
+color:#fff;min-height:100vh;overflow-x:hidden;
+display:flex;flex-direction:column;align-items:center;
+}
 
-    /* ====== HEADER ====== */
-    header {
-      margin-top: 3rem;
-    }
+.glow{
+position: fixed;
+width:600px;height:600px;
+background:rgba(153,0,255,0.12);
+filter:blur(130px);
+border-radius:50%;
+top:-150px;right:-200px;z-index:-1;
+}
 
-    .typewriter {
-      font-size: 2rem;
-      border-right: 3px solid #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      width: 0;
-      animation: typing 3s steps(30, end) forwards, blink 0.8s infinite;
-    }
+/* ===== HEADER TYPEWRITER ===== */
+header{margin-top:3rem;text-align:center;}
+.typewriter{
+font-size:2rem;font-weight:600;border-right:3px solid #fff;
+white-space:nowrap;overflow:hidden;width:0;
+animation:typing 3s steps(30,end) forwards,blink .8s infinite;
+}
 
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
-    }
+@keyframes typing{from{width:0;}to{width:100%;}}
+@keyframes blink{50%{border-color:transparent;}}
 
-    @keyframes blink {
-      50% { border-color: transparent; }
-    }
+/* ===== CARD SECTIONS ===== */
+section{
+width:85%;max-width:900px;margin:2rem auto;
+padding:2rem;background:rgba(255,255,255,0.05);
+backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);
+border-radius:20px;box-shadow:0 0 20px rgba(255,255,255,0.07);
+}
 
-    /* ====== MAIN ====== */
-    main {
-      flex-grow: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      padding: 2rem;
-    }
+/* ===== TITLES ===== */
+h2{
+font-size:1.8rem;margin-bottom:1rem;
+background:linear-gradient(90deg,#cd7cff,#7afcff);
+-webkit-background-clip:text;color:transparent;
+}
 
-    img {
-      max-width: 280px;
-      border-radius: 20px;
-      box-shadow: 0 0 25px rgba(255,255,255,0.2);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+/* ===== PROFILE IMG ===== */
+main img{
+max-width:230px;border-radius:20px;margin:1rem;
+box-shadow:0 0 30px rgba(255,255,255,0.2);
+transition:0.3s;
+}
+main img:hover{transform:scale(1.05);}
 
-    img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(255,255,255,0.4);
-    }
+/* ===== LIST STYLES ===== */
+li{margin:0.4rem 0;}
 
-    /* ====== RANDOM PICS SECTION ====== */
-    section#random-pics {
-      margin: 4rem 0;
-      text-align: center;
-    }
+/* ===== BADGES ===== */
+.badge{
+display:inline-block;margin:5px;padding:8px 14px;
+background:#15002a;border:1px solid #9e4aff;
+border-radius:12px;font-size:0.9rem;
+}
 
-    section#random-pics h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
+/* ===== PROGRESS BAR ===== */
+.level-container{margin:8px 0;}
+.level{height:10px;width:100%;background:#2a2a3e;border-radius:10px;}
+.fill{
+height:100%;background:linear-gradient(90deg,#a855f7,#22d3ee);
+border-radius:10px;
+}
 
-    section#random-pics p {
-      font-size: 1rem;
-      opacity: 0.8;
-      margin-bottom: 2rem;
-    }
-
-    .gallery {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    /* ====== FOOTER ====== */
-    footer {
-      padding: 1rem;
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-  </style>
+/* ===== FOOTER ===== */
+footer{margin:2rem 0;font-size:0.9rem;opacity:0.7;}
+a{color:#9e65ff;text-decoration:none;}
+a:hover{text-decoration:underline;}
+</style>
 </head>
+
 <body>
-  <!-- HEADER -->
-  <header>
-    <div id="typewriter" class="typewriter"></div>
-  </header>
+<div class="glow"></div>
 
-  <!-- MAIN -->
-  <main>
-    <img src="foto2jpg.jpg" alt="Foto 1">
-    <img src="fotoJenny.jpg" alt="Foto Jenny">
-  </main>
+<header><div id="typewriter" class="typewriter"></div></header>
 
-  <!-- RANDOM PICS -->
-  <section id="random-pics">
-    <h2>📸 Random Pics</h2>
-    <p>Colección de fotos random con mini descripciones ✨</p>
-    <div class="gallery">
-      <img src="random1.jpg" alt="Random 1">
-      <img src="random2.jpg" alt="Random 2">
-      <img src="random3.jpg" alt="Random 3">
-    </div>
-  </section>
+<main>
+<img src="foto2jpg.jpg">
+<img src="fotoJenny.jpg">
+</main>
 
-  <!-- FOOTER -->
-  <footer>
-    Handmade by me © 2025
-  </footer>
+<section>
+<h2>🌸 About me</h2>
+<p>✨ Pre-uni tech girl building her future in AI & software</p>
+<ul>
+<li>📚 Future AI researcher</li>
+<li>💻 Ingeniería informática vibes</li>
+<li>🌐 Idiomas enjoyer (EN / JP / DE / ES / Quechua beginner)</li>
+<li>🐶 Puppies lover + running freak</li>
+<li>🤍 Sueño: crear tech con impacto real</li>
+</ul>
+</section>
 
-  <!-- SCRIPT -->
-  <script>
-    const frases = [
-      "🌎 Hola, soy Jenny ",
-      "Hello, I'm Jenny ",
-      "Привет, я Дженни ",
-      "Ciao, sono Jenny ",
-      "Hallo, ich bin Jenny ",
-      "你好，我是Jenny ",
-      "こんにちは、私はジェニーです ",
-      "नमस्ते, मैं जेनी हूँ ",
-      "🌎 Ñuqaqa Jenny kani "
-    ];
+<section>
+<h2>⚙️ Tech Stack</h2>
+<div>
+<span class="badge">Python</span>
+<span class="badge">HTML</span>
+<span class="badge">CSS</span>
+<span class="badge">JavaScript</span>
+<span class="badge">Git & GitHub</span>
+</div>
 
-    let i = 0;
-    const typewriter = document.getElementById("typewriter");
+<div class="level-container">Python
+<div class="level"><div class="fill" style="width:70%"></div></div></div>
 
-    function escribir(frase) {
-      typewriter.textContent = "";
-      typewriter.style.width = "0";
-      let j = 0;
-      const interval = setInterval(() => {
-        if (j < frase.length) {
-          typewriter.textContent += frase[j];
-          j++;
-        } else {
-          clearInterval(interval);
-          setTimeout(() => borrar(), 1500);
-        }
-      }, 120);
-    }
+<div class="level-container">Web Dev
+<div class="level"><div class="fill" style="width:55%"></div></div></div>
 
-    function borrar() {
-      setTimeout(() => {
-        typewriter.style.width = "0";
-        i = (i + 1) % frases.length;
-        escribir(frases[i]);
-        document.title = frases[i];
-      }, 6000);
-    }
+<div class="level-container">AI / ML learning path
+<div class="level"><div class="fill" style="width:25%"></div></div></div>
+</section>
 
-    escribir(frases[i]);
-  </script>
+<section>
+<h2>🕒 Timeline</h2>
+<ul>
+<li>2023 — Me gradué con el 1° puesto</li>
+<li>2024 — Becada en dos programas tech</li>
+<li>2025 — Primera web personal + hackathon + Harvard CS50</li>
+<li>2026 — AI dream loading…</li>
+</ul>
+</section>
+
+<section>
+<h2>🚀 Projects</h2>
+<ul>
+<li>✅ Web personal</li>
+<li>✅ Prototipo de app para gente discapacitada en Figma</li>
+<li>✅ Proyecto eco-vegan product concept</li>
+<li>📚 Harvard CS50 progress</li>
+</ul>
+</section>
+
+<section>
+<h2>🌈 Random facts</h2>
+<ul>
+<li>🧠 Me gusta aprender idiomas</li>
+<li>🏃‍♀️ Me gusta el running </li>
+<li>👾 Chess player</li>
+<li>🤝 Me encanta conocer gente creativa</li>
+</ul>
+</section>
+
+<section>
+<h2>🎯 Metas 2025</h2>
+<ul>
+<li>Crear un club tech</li>
+<li>Crear mi primer mini-proyecto de IA</li>
+<li></li>
+</ul>
+</section>
+
+<section style="text-align:center;">
+<h2>📬 Contact</h2>
+<a href="mailto:jennycabrerapalomino1@gmail.com">Email me 💫</a><br>
+</section>
+
+<footer>Handmade with 💜 by Jenny © 2025</footer>
+
+<script>
+const frases=[
+"✨ Hola, soy Jenny",
+"🌐 Hello, I’m Jenny",
+"🇯🇵 こんにちは、ジェニーです",
+"🇩🇪 Hallo, ich bin Jenny",
+"🌎 Ñuqaqa Jenny kani",
+"💫 Future AI Engineer",
+"👾 Coding + idiomas + ciencia"
+];
+let i=0;
+const el=document.getElementById("typewriter");
+function type(){
+el.textContent="";el.style.width="0";
+let t=0;let int=setInterval(()=>{
+if(t<frases[i].length){el.textContent+=frases[i][t];t++;}else{
+clearInterval(int);setTimeout(()=>del(),1500);}
+},120);}
+function del(){setTimeout(()=>{
+i=(i+1)%frases.length;type();document.title=frases[i];
+},2000);}
+type();
+</script>
+
 </body>
 </html>
