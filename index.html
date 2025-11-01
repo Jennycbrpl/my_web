@@ -19,8 +19,8 @@
     section{width:85%;max-width:900px;margin:2rem auto;padding:2rem;background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;transition:0.3s;}
     section:hover{border-color:#b388ff;box-shadow:0 0 25px #b388ff40;}
     h2{font-size:1.8rem;margin-bottom:1rem;background:linear-gradient(90deg,#cd7cff,#7afcff);-webkit-background-clip:text;color:transparent;}
-    main img{max-width:320px;border-radius:20px;margin:1rem;box-shadow:0 0 30px rgba(255,255,255,0.2);transition:0.3s;}
-    main img:hover{transform:scale(1.05);}
+    main img{max-width:320px;border-radius:20px;margin:1rem;box-shadow:0 0 30px rgba(255,255,255,0.2);transition:0.3s;cursor:pointer;}
+    main img:hover{transform:scale(1.03);}
     .badge{display:inline-block;margin:5px;padding:8px 14px;background:#15002a;border:1px solid #9e4aff;border-radius:12px;font-size:0.9rem;}
     .level{height:10px;width:100%;background:#2a2a3e;border-radius:10px;}
     .fill{height:100%;background:linear-gradient(90deg,#a855f7,#22d3ee);border-radius:10px;}
@@ -32,6 +32,38 @@
     .random-gallery img{width:45%;max-width:420px;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,0.4);}
     footer{margin:2rem 0;font-size:0.9rem;opacity:0.7;}
     a{color:#c084fc;text-decoration:none;} a:hover{text-decoration:underline;}
+
+    /* Modal / gallery styles */
+    .modal{
+      position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:10000;opacity:0;pointer-events:none;transition:opacity .25s ease;
+    }
+    .modal.open{opacity:1;pointer-events:auto;}
+    .gallery{
+      position:relative;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center;max-width:1200px;padding:24px;
+    }
+    .photo{
+      width:180px;height:120px;object-fit:cover;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.6);transform:scale(0);opacity:0;
+    }
+    /* burst animation: scale and fade with stagger */
+    .photo.pop{
+      animation:pop .45s cubic-bezier(.2,.9,.3,1) forwards;
+    }
+    @keyframes pop{
+      0%{transform:scale(0);opacity:0;}
+      60%{transform:scale(1.12);opacity:1;}
+      100%{transform:scale(1);opacity:1;}
+    }
+    .modal-close{
+      position:absolute;top:18px;right:18px;color:#fff;background:transparent;border:2px solid rgba(255,255,255,0.12);padding:8px 12px;border-radius:10px;cursor:pointer;
+    }
+    .modal-backdrop{position:absolute;inset:0;}
+    /* full-size preview when clicking a thumbnail */
+    .preview{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.95);z-index:11000;opacity:0;pointer-events:none;transition:opacity .2s;
+    }
+    .preview.open{opacity:1;pointer-events:auto;}
+    .preview img{max-width:90%;max-height:90%;border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,0.6);}
+    .hint{font-size:0.85rem;opacity:0.8;margin-top:10px;text-align:center;color:#ddd;}
   </style>
 </head>
 <body>
@@ -49,8 +81,8 @@
   <header><div id="typewriter" class="typewriter"></div></header>
 
   <main style="display:flex;flex-wrap:wrap;justify-content:center;">
-    <!-- profile: usar q3.jpg -->
-    <img src="images/q3.jpg" alt="profile">
+    <!-- profile: click abre galería -->
+    <img id="profileImg" src="images/q3.jpg" alt="profile" title="Click para ver fotos familiares">
   </main>
 
   <section class="about-row">
@@ -63,10 +95,7 @@
         <li>Amo los perritos</li>
       </ul>
     </div>
-    <div class="about-image">
-      <!-- imagen al lado de About me: usar q8.jpg -->
-      <img src="images/q8.jpg" alt="about-me-image">
-    </div>
+    <!-- la miniatura se ha movido a la ráfaga; eliminada del About Me para evitar duplicados -->
   </section>
 
   <section>
@@ -86,8 +115,8 @@
   <section>
     <h2>🕒 Timeline</h2>
     <ul>
-      <li>2023: Primer puesto al gruduarme del colegio</li>
-      <li>2024: Becas woman in tech</li>
+      <li>2023: Primer puesto al graduarme del colegio</li>
+      <li>2024: Obtuve dos becas en tech</li>
       <li>2025: Web personal + CS50 + hackathon</li>
     </ul>
   </section>
@@ -109,6 +138,12 @@
       <li>Juego ajedrez</li>
       <li>Me gusta conectar con gente creativa</li>
     </ul>
+
+    <div class="random-gallery" aria-hidden="true">
+      <!-- si quieres puedes añadir más random images aquí -->
+      <img src="images/random/7.jpg" alt="random7">
+      <img src="images/random/8.jpg" alt="random8">
+    </div>
   </section>
 
   <section style="text-align:center;">
@@ -119,20 +154,34 @@
 
   <footer>made with stardust by Jenny © 2025</footer>
 
+  <!-- Modal (hidden by default) -->
+  <div id="familyModal" class="modal" role="dialog" aria-hidden="true" aria-label="Galería familiar">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <button class="modal-close" id="modalClose">Cerrar ✕</button>
+    <div class="gallery" id="galleryContainer" aria-live="polite"></div>
+    <div class="hint" style="width:100%;text-align:center;color:#ccc;">Haz click en una foto para verla grande. Esc para cerrar.</div>
+  </div>
+
+  <!-- Full preview -->
+  <div id="preview" class="preview" role="dialog" aria-hidden="true">
+    <img id="previewImg" src="" alt="Vista ampliada">
+  </div>
+
   <script>
+    /* ========== Tipo writer + cursor + stars (como antes) ========== */
     const frases=[
       "✨ Hola, soy Jenny",
-      "🌐 Hello, I am Jenny",
-      "🇯🇵 こんにちは、ジェニーです",
-      "🇩🇪 Hallo, ich bin Jenny",
-      "🌎 Ñuqaqa Jenny kani",
+      "Hello, I am Jenny",
+      "こんにちは、ジェニーです",
+      "Hallo, ich bin Jenny",
+      "Ñuqaqa Jenny kani",
       "👾 Aprendiendo para trabajar en IA",
-      "⚡ Building my future"
     ];
     let i=0;
     const t=document.getElementById("typewriter");
     function type(){
-      t.textContent="";t.style.width="0";
+      t.textContent="";
+      t.style.width="0";
       let j=0;const int=setInterval(()=>{
         if(j<frases[i].length){t.textContent+=frases[i][j];j++;}
         else{clearInterval(int);setTimeout(del,1500);} 
@@ -160,8 +209,100 @@
       requestAnimationFrame(draw);
     }
     draw();
-
     setTimeout(()=>document.getElementById("loader").style.display="none",1200);
+
+    /* ========== Galería familiar: abrir al click en profileImg ========== */
+    // Lista de imágenes familiares (ajustada a los archivos que dijiste que existen)
+    const familyImages = [
+      "images/q1.jpg",
+      "images/q9.jpg",
+      "images/q5.jpg",
+      "images/q2.jpg",
+      "images/q8.jpg" // movida aquí desde About Me
+    ];
+
+    const profileImg = document.getElementById("profileImg");
+    const modal = document.getElementById("familyModal");
+    const galleryContainer = document.getElementById("galleryContainer");
+    const modalClose = document.getElementById("modalClose");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const preview = document.getElementById("preview");
+    const previewImg = document.getElementById("previewImg");
+
+    // Preload imágenes (silencioso) para que la ráfaga sea fluida
+    familyImages.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    function openModal(){
+      // limpiar
+      galleryContainer.innerHTML = "";
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden","false");
+
+      // construir la "rafaga": añadimos las imágenes con un pequeño retraso para efecto
+      familyImages.forEach((src, idx) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = `Familia ${idx+1}`;
+        img.className = "photo";
+        img.tabIndex = 0;
+        // click para abrir preview grande
+        img.addEventListener("click", ()=> openPreview(src));
+        img.addEventListener("keydown", (e)=>{ if(e.key === "Enter") openPreview(src); });
+        galleryContainer.appendChild(img);
+
+        // pequeña demora para animar en cascada
+        setTimeout(()=> img.classList.add("pop"), idx * 120);
+      });
+
+      // focus al primer thumbnail
+      setTimeout(()=>{
+        const first = galleryContainer.querySelector(".photo");
+        if(first) first.focus();
+      }, 120);
+      document.addEventListener("keydown", onKeyDownWhileModal);
+    }
+
+    function closeModal(){
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden","true");
+      document.removeEventListener("keydown", onKeyDownWhileModal);
+    }
+
+    function onKeyDownWhileModal(e){
+      if(e.key === "Escape"){
+        if(preview.classList.contains("open")) closePreview();
+        else closeModal();
+      }
+    }
+
+    modalClose.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", closeModal);
+
+    profileImg.addEventListener("click", openModal);
+
+    /* ========== Preview grande ========== */
+    function openPreview(src){
+      previewImg.src = src;
+      preview.classList.add("open");
+      preview.setAttribute("aria-hidden","false");
+      document.addEventListener("keydown", onKeyDownWhilePreview);
+      preview.addEventListener("click", closePreview);
+    }
+    function closePreview(){
+      preview.classList.remove("open");
+      preview.setAttribute("aria-hidden","true");
+      previewImg.src = "";
+      document.removeEventListener("keydown", onKeyDownWhilePreview);
+      preview.removeEventListener("click", closePreview);
+    }
+    function onKeyDownWhilePreview(e){
+      if(e.key === "Escape") closePreview();
+    }
+
+    /* accesibilidad: cerrar modal con click fuera y Esc ya manejado */
   </script>
 </body>
 </html>
