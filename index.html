@@ -5,216 +5,851 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>JennyOS 🌌</title>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
-    body{background:#000;color:#fff;min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;}
-    #loader{position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;color:#b388ff;font-size:1.2rem;gap:10px;letter-spacing:1px;}
-    .load-dot{width:8px;height:8px;border-radius:50%;background:#c084fc;animation:blink 1s infinite alternate;}
-    @keyframes blink{0{opacity:0.2;}100%{opacity:1;}}
-    #stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
-    .glow{position:fixed;width:600px;height:600px;background:rgba(170,0,255,0.12);filter:blur(160px);border-radius:50%;top:-200px;right:-200px;z-index:-1;}
-    .cursor{position:fixed;width:18px;height:18px;border-radius:50%;background:#c084fc;box-shadow:0 0 18px #c084fc80;pointer-events:none;z-index:9999;}
-    header{margin-top:3rem;text-align:center;}
-    .typewriter{font-size:2rem;font-weight:600;border-right:3px solid #fff;white-space:nowrap;overflow:hidden;width:0;animation:typing 3s steps(30,end) forwards,blink .8s infinite;}
-    @keyframes typing{from{width:0;}to{width:100%;}} @keyframes blink{50%{border-color:transparent;}}
-    section{width:85%;max-width:900px;margin:2rem auto;padding:2rem;background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;transition:0.3s;}
-    section:hover{border-color:#b388ff;box-shadow:0 0 25px #b388ff40;}
-    h2{font-size:1.8rem;margin-bottom:1rem;background:linear-gradient(90deg,#cd7cff,#7afcff);-webkit-background-clip:text;color:transparent;}
-    main img{max-width:320px;border-radius:20px;margin:1rem;box-shadow:0 0 30px rgba(255,255,255,0.2);transition:0.3s;cursor:pointer;}
-    main img:hover{transform:scale(1.03);}
-    .badge{display:inline-block;margin:5px;padding:8px 14px;background:#15002a;border:1px solid #9e4aff;border-radius:12px;font-size:0.9rem;}
-    .level{height:10px;width:100%;background:#2a2a3e;border-radius:10px;}
-    .fill{height:100%;background:linear-gradient(90deg,#a855f7,#22d3ee);border-radius:10px;}
-    .about-row{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;}
-    .about-text{flex:1;min-width:220px;}
-    .about-image{width:240px;flex-shrink:0;}
-    .about-image img{width:100%;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,0.4);}
-    .random-gallery{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;justify-content:center;}
-    .random-gallery img{width:45%;max-width:420px;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,0.4);}
-    footer{margin:2rem 0;font-size:0.9rem;opacity:0.7;}
-    a{color:#c084fc;text-decoration:none;} a:hover{text-decoration:underline;}
-
-    /* Modal / gallery styles */
-    .modal{
-      position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:10000;opacity:0;pointer-events:none;transition:opacity .25s ease;
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
     }
-    .modal.open{opacity:1;pointer-events:auto;}
-    .gallery{
-      position:relative;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center;max-width:1200px;padding:24px;
+    
+    body {
+      background: #0a0015;
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
     }
-    .photo{
-      width:180px;height:120px;object-fit:cover;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.6);transform:scale(0);opacity:0;
+    
+    /* Fondo gradiente suave */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(200, 150, 255, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(150, 200, 255, 0.12) 0%, transparent 50%);
+      animation: gradientShift 20s ease infinite;
+      z-index: 0;
     }
-    /* burst animation: scale and fade with stagger */
-    .photo.pop{
-      animation:pop .45s cubic-bezier(.2,.9,.3,1) forwards;
+    
+    @keyframes gradientShift {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
     }
-    @keyframes pop{
-      0%{transform:scale(0);opacity:0;}
-      60%{transform:scale(1.12);opacity:1;}
-      100%{transform:scale(1);opacity:1;}
+    
+    /* Estrellas canvas */
+    #stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
     }
-    .modal-close{
-      position:absolute;top:18px;right:18px;color:#fff;background:transparent;border:2px solid rgba(255,255,255,0.12);padding:8px 12px;border-radius:10px;cursor:pointer;
+    
+    /* Glow suave */
+    .glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: rgba(180, 140, 255, 0.08);
+      filter: blur(160px);
+      border-radius: 50%;
+      top: -200px;
+      right: -200px;
+      z-index: 0;
+      animation: glowMove 15s ease infinite;
     }
-    .modal-backdrop{position:absolute;inset:0;}
-    /* full-size preview when clicking a thumbnail */
-    .preview{
-      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.95);z-index:11000;opacity:0;pointer-events:none;transition:opacity .2s;
+    
+    @keyframes glowMove {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-100px, 100px); }
     }
-    .preview.open{opacity:1;pointer-events:auto;}
-    .preview img{max-width:90%;max-height:90%;border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,0.6);}
-    .hint{font-size:0.85rem;opacity:0.8;margin-top:10px;text-align:center;color:#ddd;}
+    
+    /* Cursor personalizado suave */
+    .cursor {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(200, 160, 255, 0.6);
+      box-shadow: 0 0 20px rgba(200, 160, 255, 0.5);
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.2s ease;
+    }
+    
+    /* Container */
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    
+    /* Header con typewriter */
+    header {
+      min-height: 40vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 0 2rem 0;
+    }
+    
+    .profile-image {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 3px solid rgba(200, 160, 255, 0.5);
+      box-shadow: 0 0 40px rgba(200, 160, 255, 0.3);
+      margin-bottom: 2rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      object-fit: cover;
+    }
+    
+    .profile-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 60px rgba(200, 160, 255, 0.5);
+      border-color: rgba(150, 200, 255, 0.6);
+    }
+    
+    .typewriter {
+      font-size: 2.5rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #d4a5ff, #a5d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid rgba(200, 160, 255, 0.8);
+      animation: blink 0.8s infinite;
+      margin-bottom: 3rem;
+    }
+    
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+    
+    /* Secciones */
+    section {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 25px;
+      padding: 2.5rem;
+      margin: 2rem auto;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(200, 160, 255, 0.05), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    section:hover::before {
+      left: 100%;
+    }
+    
+    section:hover {
+      border-color: rgba(200, 160, 255, 0.3);
+      box-shadow: 0 0 30px rgba(200, 160, 255, 0.15);
+      transform: translateY(-5px);
+    }
+    
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #d4a5ff, #a5d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+    }
+    
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    ul li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
+    }
+    
+    ul li::before {
+      content: '✨';
+      position: absolute;
+      left: 0;
+    }
+    
+    /* Tech Stack */
+    .badge-container {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    
+    .badge {
+      padding: 0.5rem 1.2rem;
+      background: rgba(200, 160, 255, 0.1);
+      border: 1px solid rgba(200, 160, 255, 0.3);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #d4a5ff;
+      transition: all 0.3s ease;
+    }
+    
+    .badge:hover {
+      background: rgba(200, 160, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(200, 160, 255, 0.2);
+    }
+    
+    .skill-bar {
+      margin: 1.5rem 0;
+    }
+    
+    .skill-name {
+      margin-bottom: 0.5rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .level {
+      height: 10px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, #d4a5ff, #a5d4ff);
+      border-radius: 10px;
+      transition: width 1s ease;
+    }
+    
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .project-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .project-card:hover {
+      border-color: rgba(200, 160, 255, 0.4);
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(200, 160, 255, 0.2);
+    }
+    
+    .project-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+    }
+    
+    .project-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: #d4a5ff;
+    }
+    
+    .project-description {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+    
+    /* Timeline */
+    .timeline-item {
+      padding: 1rem 0;
+      border-left: 2px solid rgba(200, 160, 255, 0.3);
+      padding-left: 1.5rem;
+      position: relative;
+      margin-left: 1rem;
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 1.2rem;
+      width: 10px;
+      height: 10px;
+      background: #d4a5ff;
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(200, 160, 255, 0.6);
+    }
+    
+    /* Contact Links */
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .contact-link {
+      padding: 0.8rem 2rem;
+      background: rgba(200, 160, 255, 0.1);
+      border: 1px solid rgba(200, 160, 255, 0.3);
+      border-radius: 25px;
+      text-decoration: none;
+      color: #d4a5ff;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-link:hover {
+      background: rgba(200, 160, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(200, 160, 255, 0.3);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+    }
+    
+    /* Modal Gallery */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      background: rgba(200, 160, 255, 0.2);
+      border: 2px solid rgba(200, 160, 255, 0.4);
+      color: #fff;
+      padding: 0.8rem 1.8rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+      background: rgba(200, 160, 255, 0.3);
+      box-shadow: 0 0 30px rgba(200, 160, 255, 0.4);
+    }
+    
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1200px;
+      padding: 2rem;
+    }
+    
+    .photo {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 15px;
+      border: 2px solid rgba(200, 160, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      transform: scale(0);
+      opacity: 0;
+    }
+    
+    .photo.pop {
+      animation: pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    }
+    
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .photo:hover {
+      border-color: rgba(200, 160, 255, 0.6);
+      box-shadow: 0 0 30px rgba(200, 160, 255, 0.3);
+      transform: scale(1.03);
+    }
+    
+    .preview {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 11000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .preview.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .preview img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 20px;
+      box-shadow: 0 0 80px rgba(200, 160, 255, 0.4);
+    }
+    
+    .hint {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    /* Featured Project Styles */
+    .featured-project {
+      background: linear-gradient(135deg, rgba(200, 160, 255, 0.08), rgba(150, 200, 255, 0.08));
+      border: 2px solid rgba(200, 160, 255, 0.3);
+      border-radius: 25px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .featured-project::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(200, 160, 255, 0.1), transparent);
+      animation: rotate 20s linear infinite;
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .featured-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .featured-header h3 {
+      font-size: 2rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #d4a5ff, #a5d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+    }
+    
+    .featured-badge {
+      padding: 0.4rem 1rem;
+      background: rgba(200, 160, 255, 0.2);
+      border: 1px solid rgba(200, 160, 255, 0.4);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #d4a5ff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .featured-subtitle {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 1rem;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .featured-description {
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .featured-gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .gallery-img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 2px solid rgba(200, 160, 255, 0.2);
+      transition: all 0.4s ease;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .gallery-img:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: rgba(200, 160, 255, 0.5);
+      box-shadow: 0 20px 50px rgba(200, 160, 255, 0.3);
+    }
+    
+    .featured-tags {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .tag {
+      padding: 0.5rem 1rem;
+      background: rgba(200, 160, 255, 0.15);
+      border: 1px solid rgba(200, 160, 255, 0.3);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #d4a5ff;
+      font-weight: 500;
+    }
+    
+    .featured-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .project-link {
+      padding: 0.8rem 1.8rem;
+      background: rgba(200, 160, 255, 0.15);
+      border: 1px solid rgba(200, 160, 255, 0.3);
+      border-radius: 25px;
+      text-decoration: none;
+      color: #d4a5ff;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    
+    .project-link:hover {
+      background: rgba(200, 160, 255, 0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(200, 160, 255, 0.2);
+    }
   </style>
 </head>
 <body>
-  <div id="loader">
-    loading JennyOS…
-    <div style="display:flex;gap:8px;">
-      <div class="load-dot"></div><div class="load-dot"></div><div class="load-dot"></div>
-    </div>
-  </div>
-
   <canvas id="stars"></canvas>
   <div class="glow"></div>
-  <div class="cursor" id="cursor"></div>
+  <div class="cursor"></div>
 
-  <header><div id="typewriter" class="typewriter"></div></header>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <img src="images/q3.jpg" alt="Jenny Cabrera" class="profile-image" id="profileImg">
+      <div id="typewriter" class="typewriter"></div>
+    </div>
+  </header>
 
-  <main style="display:flex;flex-wrap:wrap;justify-content:center;">
-    <!-- profile: click abre galería -->
-    <img id="profileImg" src="images/q3.jpg" alt="profile" title="Click para ver fotos familiares">
-  </main>
-
-  <section class="about-row">
-    <div class="about-text">
+  <!-- Main Content -->
+  <div class="container">
+    <!-- About Me -->
+    <section>
       <h2>🌸 About me</h2>
       <ul>
         <li>AI enthusiastic</li>
         <li>De Lima-Peru</li>
-        <li>Estudio ing. informatica en la UPCH</li>
+        <li>Estudio ing. informática en la UPCH</li>
         <li>Tengo 18 años</li>
         <li>Runner girl</li>
         <li>Amo los perritos</li>
       </ul>
-    </div>
-    <!-- la miniatura se ha movido a la ráfaga; eliminada del About Me para evitar duplicados -->
-  </section>
+    </section>
 
-  <section>
-    <h2>⚙️ Tech Stack</h2>
-    <div>
-      <span class="badge">Python</span>
-      <span class="badge">HTML</span>
-      <span class="badge">CSS</span>
-      <span class="badge">JavaScript</span>
-      <span class="badge">GitHub</span>
-    </div>
-    <p>Python</p><div class="level"><div class="fill" style="width:70%"></div></div>
-    <p>Web Dev</p><div class="level"><div class="fill" style="width:50%"></div></div>
-    <p>AI Learning</p><div class="level"><div class="fill" style="width:50%"></div></div>
-  </section>
+    <!-- Tech Stack -->
+    <section>
+      <h2>⚙️ Tech Stack</h2>
+      <div class="badge-container">
+        <span class="badge">Python</span>
+        <span class="badge">HTML</span>
+        <span class="badge">CSS</span>
+        <span class="badge">JavaScript</span>
+        <span class="badge">GitHub</span>
+      </div>
+      
+      <div class="skill-bar">
+        <p class="skill-name">Python</p>
+        <div class="level"><div class="fill" style="width:40%"></div></div>
+      </div>
+      
+      <div class="skill-bar">
+        <p class="skill-name">Web Dev</p>
+        <div class="level"><div class="fill" style="width:35%"></div></div>
+      </div>
+      
+      <div class="skill-bar">
+        <p class="skill-name">AI Learning</p>
+        <div class="level"><div class="fill" style="width:30%"></div></div>
+      </div>
+    </section>
 
-  <section>
-    <h2>🕒 Timeline</h2>
-    <ul>
-      <li>2023: Primer puesto al graduarme del colegio</li>
-      <li>2024: Obtuve dos becas en tech</li>
-      <li>2025: Web personal + CS50 + hackathon</li>
-    </ul>
-  </section>
+    <!-- Timeline -->
+    <section>
+      <h2>🕒 Timeline</h2>
+      <div class="timeline-item">
+        <strong>2023:</strong> Primer puesto al graduarme del colegio
+      </div>
+      <div class="timeline-item">
+        <strong>2024:</strong> Obtuve dos becas en tech
+      </div>
+      <div class="timeline-item">
+        <strong>2025:</strong> Web personal + CS50 + hackathon
+      </div>
+    </section>
 
-  <section>
-    <h2>🚀 Projects</h2>
-    <ul>
-      <li>Web personal</li>
-      <li>App que contribuye a la ODS 3 en Figma</li>
-      <li>Producto vegano mockup</li>
-      <li>CS50 journey</li>
-    </ul>
-  </section>
+    <!-- Projects -->
+    <section>
+      <h2>🚀 Projects</h2>
+      
+      <!-- Featured Project: Akompaña -->
+      <div class="featured-project">
+        <div class="featured-header">
+          <h3>🌸 Akompaña</h3>
+          <span class="featured-badge">Featured Project</span>
+        </div>
+        <p class="featured-subtitle">Guía de masajes terapéuticos para cuidadores</p>
+        <p class="featured-description">
+          App diseñada para cuidadores de personas con discapacidad de escasos recursos. 
+          Proporciona guías paso a paso de masajes terapéuticos para mejorar la calidad 
+          de vida de personas en situación de dependencia. Contribuye al ODS 3: Salud y Bienestar.
+        </p>
+        
+        <div class="featured-gallery">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==" alt="Akompaña Onboarding" class="gallery-img" id="akompana-1">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==" alt="Akompaña Features" class="gallery-img" id="akompana-2">
+        </div>
+        
+        <div class="featured-tags">
+          <span class="tag">Figma</span>
+          <span class="tag">UX/UI Design</span>
+          <span class="tag">Social Impact</span>
+          <span class="tag">Healthcare</span>
+          <span class="tag">ODS 3</span>
+        </div>
+        
+        <div class="featured-links">
+          <a href="https://www.figma.com/design/p2rPPjEfjo29K4DdICcSaq/Travel-APP--Community-" target="_blank" class="project-link">Ver en Figma →</a>
+        </div>
+      </div>
+      
+      <!-- Other Projects -->
+      <div class="projects-grid" style="margin-top: 3rem;">
+        <div class="project-card">
+          <div class="project-title">Web personal</div>
+          <div class="project-description">Mi portafolio personal con diseño futurista y animaciones suaves</div>
+        </div>
+        
+        <div class="project-card">
+          <div class="project-title">Producto vegano mockup</div>
+          <div class="project-description">Diseño de producto vegano sostenible</div>
+        </div>
+      </div>
+    </section>
 
-  <section>
-    <h2>🌈 Random Facts</h2>
-    <ul>
-      <li>Hablo español, ingles y estoy aprendiendo aleman</li>
-      <li>Juego ajedrez</li>
-      <li>Ocasionalmente voy a carreras de running</li>
-      <li>Me gusta conectar con gente creativa</li>
-    </ul>
+    <!-- Random Facts -->
+    <section>
+      <h2>🌈 Random Facts</h2>
+      <ul>
+        <li>Hablo español, inglés y estoy aprendiendo alemán</li>
+        <li>Juego ajedrez</li>
+        <li>Ocasionalmente voy a carreras de running</li>
+        <li>Me gusta conectar con gente creativa</li>
+      </ul>
+    </section>
 
-  <section style="text-align:center;">
-    <h2>📬 Contact</h2>
-    <a href="mailto:jennycabrerapalomino1@gmail.com">Email me 💫</a><br>
-    <a href="https://github.com/jennycbrpl" target="_blank">GitHub</a>
-  </section>
+    <!-- Contact -->
+    <section style="text-align:center;">
+      <h2>📬 Contact</h2>
+      <div class="contact-links">
+        <a href="mailto:jennycabrerapalomino1@gmail.com" class="contact-link">Email me 💫</a>
+        <a href="https://github.com/jennycbrpl" target="_blank" class="contact-link">GitHub</a>
+      </div>
+    </section>
+  </div>
 
   <footer>made with stardust by Jenny © 2025</footer>
 
-  <!-- Modal (hidden by default) -->
-  <div id="familyModal" class="modal" role="dialog" aria-hidden="true" aria-label="Galería familiar">
+  <!-- Modal Gallery -->
+  <div id="familyModal" class="modal" role="dialog" aria-hidden="true">
     <div class="modal-backdrop" id="modalBackdrop"></div>
     <button class="modal-close" id="modalClose">Cerrar ✕</button>
-    <div class="gallery" id="galleryContainer" aria-live="polite"></div>
-    <div class="hint" style="width:100%;text-align:center;color:#ccc;">Haz click en una foto para verla grande. Esc para cerrar.</div>
+    <div class="gallery" id="galleryContainer"></div>
+    <div class="hint">Haz click en una foto para verla grande. Esc para cerrar.</div>
   </div>
 
-  <!-- Full preview -->
+  <!-- Preview -->
   <div id="preview" class="preview" role="dialog" aria-hidden="true">
     <img id="previewImg" src="" alt="Vista ampliada">
   </div>
 
   <script>
-    /* ========== Tipo writer + cursor + stars (como antes) ========== */
-    const frases=[
+    /* ========== Typewriter con idiomas ========== */
+    const frases = [
       "✨ Hola, soy Jenny",
       "Hello, I am Jenny",
       "こんにちは、ジェニーです",
       "Hallo, ich bin Jenny",
       "Ñuqaqa Jenny kani",
-      "👾 Aprendiendo para trabajar en IA",
+      "👾 Aprendiendo para trabajar en IA"
     ];
-    let i=0;
-    const t=document.getElementById("typewriter");
-    function type(){
-      t.textContent="";
-      t.style.width="0";
-      let j=0;const int=setInterval(()=>{
-        if(j<frases[i].length){t.textContent+=frases[i][j];j++;}
-        else{clearInterval(int);setTimeout(del,1500);} 
-      },120);
+    
+    let i = 0;
+    const typewriterEl = document.getElementById("typewriter");
+    
+    function typeText() {
+      const text = frases[i];
+      let charIndex = 0;
+      typewriterEl.textContent = "";
+      
+      const typeInterval = setInterval(() => {
+        if (charIndex < text.length) {
+          typewriterEl.textContent += text[charIndex];
+          charIndex++;
+        } else {
+          clearInterval(typeInterval);
+          setTimeout(deleteText, 2000);
+        }
+      }, 100);
     }
-    function del(){
-      setTimeout(()=>{i=(i+1)%frases.length;type();document.title=frases[i];},2000);
+    
+    function deleteText() {
+      setTimeout(() => {
+        i = (i + 1) % frases.length;
+        document.title = frases[i];
+        typeText();
+      }, 1000);
     }
-    type();
+    
+    typeText();
 
-    const cur=document.getElementById("cursor");
-    document.addEventListener("mousemove",e=>{
-      cur.style.left=(e.pageX-9)+"px";
-      cur.style.top=(e.pageY-9)+"px";
+    /* ========== Cursor personalizado ========== */
+    const cursor = document.querySelector('.cursor');
+    
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = (e.pageX - 9) + 'px';
+      cursor.style.top = (e.pageY - 9) + 'px';
     });
 
-    const c=document.getElementById("stars");
-    const ctx=c.getContext("2d");
-    let w,h;
-    function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;}
-    resize();window.onresize=resize;
-    const stars=Array(200).fill().map(()=>({x:Math.random()*w,y:Math.random()*h,z:Math.random()*3}));
-    function draw(){ctx.fillStyle="#000";ctx.fillRect(0,0,w,h);ctx.fillStyle="#fff";
-      for(const s of stars){const size=s.z*1.2;ctx.fillRect(s.x,s.y,size,size);s.x-=s.z; if(s.x<0){s.x=w;}}
+    /* ========== Canvas de estrellas ========== */
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    
+    resize();
+    window.onresize = resize;
+    
+    const stars = Array(150).fill().map(() => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      z: Math.random() * 2 + 0.5
+    }));
+    
+    function draw() {
+      ctx.fillStyle = 'rgba(10, 0, 21, 0.1)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(200, 160, 255, 0.8)';
+      
+      for (const s of stars) {
+        const size = s.z * 1.2;
+        ctx.fillRect(s.x, s.y, size, size);
+        s.x -= s.z * 0.3;
+        if (s.x < 0) {
+          s.x = w;
+          s.y = Math.random() * h;
+        }
+      }
+      
       requestAnimationFrame(draw);
     }
+    
     draw();
-    setTimeout(()=>document.getElementById("loader").style.display="none",1200);
 
-    /* ========== Galería familiar: abrir al click en profileImg ========== */
-    // Lista de imágenes familiares (ajustada a los archivos que dijiste que existen)
+    /* ========== Galería familiar ========== */
     const familyImages = [
       "images/q1.jpg",
       "images/q9.jpg",
       "images/q5.jpg",
       "images/q2.jpg",
-      "images/q8.jpg" // movida aquí desde About Me
+      "images/q8.jpg"
     ];
 
     const profileImg = document.getElementById("profileImg");
@@ -225,80 +860,75 @@
     const preview = document.getElementById("preview");
     const previewImg = document.getElementById("previewImg");
 
-    // Preload imágenes (silencioso) para que la ráfaga sea fluida
+    // Preload
     familyImages.forEach(src => {
       const img = new Image();
       img.src = src;
     });
 
-    function openModal(){
-      // limpiar
+    function openModal() {
       galleryContainer.innerHTML = "";
       modal.classList.add("open");
-      modal.setAttribute("aria-hidden","false");
+      modal.setAttribute("aria-hidden", "false");
 
-      // construir la "rafaga": añadimos las imágenes con un pequeño retraso para efecto
       familyImages.forEach((src, idx) => {
         const img = document.createElement("img");
         img.src = src;
-        img.alt = `Familia ${idx+1}`;
+        img.alt = `Familia ${idx + 1}`;
         img.className = "photo";
         img.tabIndex = 0;
-        // click para abrir preview grande
-        img.addEventListener("click", ()=> openPreview(src));
-        img.addEventListener("keydown", (e)=>{ if(e.key === "Enter") openPreview(src); });
+        img.addEventListener("click", () => openPreview(src));
+        img.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") openPreview(src);
+        });
         galleryContainer.appendChild(img);
-
-        // pequeña demora para animar en cascada
-        setTimeout(()=> img.classList.add("pop"), idx * 120);
+        setTimeout(() => img.classList.add("pop"), idx * 120);
       });
 
-      // focus al primer thumbnail
-      setTimeout(()=>{
+      setTimeout(() => {
         const first = galleryContainer.querySelector(".photo");
-        if(first) first.focus();
+        if (first) first.focus();
       }, 120);
+      
       document.addEventListener("keydown", onKeyDownWhileModal);
     }
 
-    function closeModal(){
+    function closeModal() {
       modal.classList.remove("open");
-      modal.setAttribute("aria-hidden","true");
+      modal.setAttribute("aria-hidden", "true");
       document.removeEventListener("keydown", onKeyDownWhileModal);
     }
 
-    function onKeyDownWhileModal(e){
-      if(e.key === "Escape"){
-        if(preview.classList.contains("open")) closePreview();
+    function onKeyDownWhileModal(e) {
+      if (e.key === "Escape") {
+        if (preview.classList.contains("open")) closePreview();
         else closeModal();
       }
     }
 
     modalClose.addEventListener("click", closeModal);
     modalBackdrop.addEventListener("click", closeModal);
-
     profileImg.addEventListener("click", openModal);
 
-    /* ========== Preview grande ========== */
-    function openPreview(src){
+    function openPreview(src) {
       previewImg.src = src;
       preview.classList.add("open");
-      preview.setAttribute("aria-hidden","false");
+      preview.setAttribute("aria-hidden", "false");
       document.addEventListener("keydown", onKeyDownWhilePreview);
       preview.addEventListener("click", closePreview);
     }
-    function closePreview(){
+
+    function closePreview() {
       preview.classList.remove("open");
-      preview.setAttribute("aria-hidden","true");
+      preview.setAttribute("aria-hidden", "true");
       previewImg.src = "";
       document.removeEventListener("keydown", onKeyDownWhilePreview);
       preview.removeEventListener("click", closePreview);
     }
-    function onKeyDownWhilePreview(e){
-      if(e.key === "Escape") closePreview();
-    }
 
-    /* accesibilidad: cerrar modal con click fuera y Esc ya manejado */
+    function onKeyDownWhilePreview(e) {
+      if (e.key === "Escape") closePreview();
+    }
   </script>
 </body>
 </html>
